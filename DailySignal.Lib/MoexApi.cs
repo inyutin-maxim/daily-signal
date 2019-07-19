@@ -50,6 +50,15 @@ namespace DailySignal {
             }
         }
 
+        public static bool HasCandles(Sec sec, DateTime date) {
+            var dateString = date.ToString(DATE_FORMAT);
+            var url = $"https://iss.moex.com/iss/engines/stock/markets/{sec.Market}/boards/{sec.Board}/securities/{sec.ID}/candles.json"
+                + "?from=" + dateString
+                + "&till=" + dateString;
+
+            return JsonConvert.DeserializeObject<JObject>(CURL(url))["candles"]["data"].Count() > 0;
+        }
+
         static string CURL(string url) {
             Console.Error.WriteLine(url);
 
