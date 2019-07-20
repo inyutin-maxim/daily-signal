@@ -1,0 +1,17 @@
+dist: bionic
+language: none
+
+services:
+  - docker
+
+script:
+  - >
+    docker run -v $TRAVIS_BUILD_DIR:/repo -w /repo/DailySignal.Bot
+    -e TZ=Europe/Moscow
+    -e TELEGRAM_KEY=$TELEGRAM_KEY
+    -e TELEGRAM_CHAT=$TELEGRAM_CHAT
+    mcr.microsoft.com/dotnet/core/sdk:2.1-alpine
+    sh -ev run.sh
+
+notifications:
+  email: travis_notifications@amartynov.ru
