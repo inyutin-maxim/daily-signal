@@ -1,6 +1,8 @@
 ﻿using LinqStatistics;
+using Pastel;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -60,19 +62,15 @@ namespace DailySignal {
                     bestAvgXIrr = g.AvgXIrr;
 
                 var sdXIrrCent = sdXIrrCents.TakeWhile(i => g.SdXIrr >= i).Count();
-                if(sdXIrrCent > 50)
-                    Console.ForegroundColor = ConsoleColor.Red;
 
                 Console.WriteLine(String.Join("\t",
                     g.Thresholds.Low, g.Thresholds.High,
                     g.Count,
                     Math.Round(100 * g.AvgXIrr, 2),
-                    "p" + sdXIrrCent,
+                    ("p" + sdXIrrCent).Pastel(CentToColor(sdXIrrCent)),
                     Math.Round(g.AvgTradeCount, 1),
                     Math.Round(g.AvgSlipCount, 1)
                 ));
-
-                Console.ResetColor();
             }
         }
 
@@ -186,6 +184,20 @@ namespace DailySignal {
             }
 
             return new ExperimentResult(thresholds, xirr, tradeCount, slipCount);
+        }
+
+        static Color CentToColor(int cent) {
+            var h = 4 - cent / 25d;
+
+            int Component(int n) {
+                var k = (n + h) % 12;
+                var c = Math.Min(k - 3, 9 - k);
+                c = Math.Min(c, 1);
+                c = Math.Max(c, -1);
+                return (int)Math.Round(127.5 * (1 - c));
+            }
+
+            return Color.FromArgb(Component(0), Component(8), Component(4));
         }
     }
 
