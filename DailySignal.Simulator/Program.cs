@@ -37,7 +37,7 @@ namespace DailySignal {
                 })
                 .ToArray();
 
-            var countTolerance = groups.Max(g => g.Count) - 2;
+            var countTolerance = groups.Max(g => g.Count) * 95 / 100;
 
             groups = groups
                 .Where(g => g.Count >= countTolerance)
@@ -78,7 +78,7 @@ namespace DailySignal {
             var minFrom = DateTime.Today.AddYears(-3);
             var indicatorWarmupLength = 30;
 
-            var step = 13;
+            var step = 1;
             var length = 250;
 
             var startIndex = history.Count - length;
